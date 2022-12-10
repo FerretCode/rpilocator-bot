@@ -1,5 +1,7 @@
 # rpilocator-bot
 
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/kxt68r?referralCode=uFhfCw)
+
 A Discord bot for detecting new RPIs in stock
 
 ## how to use
