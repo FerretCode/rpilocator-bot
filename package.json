@@ -12,6 +12,6 @@
   "dependencies": {
     "deta": "^1.1.0",
     "goated.js": "^1.0.6",
-    "rss-watcher": "^1.4.0"
+    "rss-parser": "^3.12.0",
   }
 }

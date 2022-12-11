@@ -1,8 +1,9 @@
 const discord = require("discord.js");
-const Watcher = require("rss-watcher");
+const Parser = require("rss-parser");
+const { Deta } = require("deta");
 
 module.exports.Notification = class {
-  constructor(client) {
+  constructor(client, projectKey) {
     this.users = [];
 
     this.addUser = (user) => this.users.push(user);
@@ -14,15 +15,25 @@ module.exports.Notification = class {
       );
 
     this.watch = () => {
-      const watcher = new Watcher("https://rpilocator.com/feed");
+      const parser = new Parser();
+      const db = Deta(projectKey).Base("feed");
 
-      watcher.set({ interval: 60 });
+      try {
+        setInterval(async () => {
+          const feed = await parser.parseURL("https://rpilocator.com/feed/");
 
-      watcher.on("new article", (article) => {
-        console.log(article);
+          const item = feed.items[0];
 
-        this.pushNotification(article.description);
-      });
+          const lastAlert = await db.get("last_alert");
+
+          if (!lastAlert) await db.put(item, "last_alert");
+          if (item.guid === lastAlert.guid) return;
+
+          this.pushNotification(item.content);
+        }, 60000);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     this.pushNotification = async (message) => {

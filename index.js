@@ -11,7 +11,7 @@ client.env("./.env");
 
 // recreate notification & subscribers on start
 const db = Deta(process.env.PROJECT_KEY).Base("users");
-const notification = new Notification(client);
+const notification = new Notification(client, process.env.PROJECT_KEY);
 db.fetch()
   .then((users) => {
     for (const user of users.items) {
@@ -20,7 +20,7 @@ db.fetch()
       notification.addUser(user.id);
     }
 
-		notification.watch();
+    notification.watch();
   })
   .catch((err) => console.error(err));
 
