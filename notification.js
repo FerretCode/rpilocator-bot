@@ -30,6 +30,8 @@ module.exports.Notification = class {
           if (item.guid === lastAlert.guid) return;
 
           this.pushNotification(item.content);
+
+          await db.put(item, "last_alert");
         }, 60000);
       } catch (error) {
         console.log(error);
@@ -41,12 +43,14 @@ module.exports.Notification = class {
         try {
           const user = await client.users.fetch(id);
 
-          await user.send(
-            new discord.EmbedBuilder()
-              .setColor("Green")
-              .setTitle("New RPI in stock")
-              .setDescription(message)
-          );
+          await user.send({
+            embeds: [
+              new discord.EmbedBuilder()
+                .setColor("Green")
+                .setTitle("New RPI in stock")
+                .setDescription(message),
+            ],
+          });
         } catch (error) {
           console.error(error);
 
