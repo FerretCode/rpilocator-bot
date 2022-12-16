@@ -48,6 +48,10 @@ module.exports.Notification = class {
               new discord.EmbedBuilder()
                 .setColor("Green")
                 .setTitle("New RPI in stock")
+                .addFields({
+                  name: "See It",
+                  value: "https://rpilocator.com",
+                })
                 .setDescription(message),
             ],
           });
